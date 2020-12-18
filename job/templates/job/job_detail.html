@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block body %}
+    <!-- bradcam_area  -->
+    <div class="bradcam_area bradcam_bg_1">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        <h3>{{job}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ bradcam_area  -->
+
+    <div class="job_details_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="job_details_header">
+                        <div class="single_jobs white-bg d-flex justify-content-between">
+                            <div class="jobs_left d-flex align-items-center">
+                                <div class="thumb">
+                                    <img src="img/svg_icon/1.svg" alt="">
+                                </div>
+                                <div class="jobs_conetent">
+                                    <a href="#"><h4>{{job}}</h4></a>
+                                    <div class="links_locat d-flex align-items-center">
+                                        <div class="location">
+                                            <a href="https://www.google.com/maps/search/{{job.location}}+country/@33.1492197,48.6900967,6z/data=!3m1!4b1" target="_blank"> <p> <i class="fa fa-map-marker"></i> {{job.location}}</p></a>
+                                        </div>
+                                        <div class="location">
+                                            <p> <i class="fa fa-clock-o"></i>{{job.job_type}}</p>
+
+                                        </div>
+                                    </div>
+                                    <div class="location">
+                                            <p>Available: {{k}}</p>
+                                            <p>Applied: {{job.apply_count}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="jobs_right">
+                                <div class="apply_now">
+                                    {% if request.user in job.favourite.all %}
+                                    <a class="heart_mark" href="{% url 'jobs:a' job.slug %}"> <i class="fa fa-heart"></i> </a>
+
+                                    {% else %}
+                                    <a class="heart_mark" href="{% url 'jobs:a' job.slug %}"> <i class="ti-heart"></i> </a>
+                                    {% endif %}
+
+                                    {% if request.user == job.owner %}
+                                          <a href="{% url 'jobs:delete_job' job.slug %}"><button class="boxed-btn2 w-55" type="submit">Delete</button></a>
+                                        {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="descript_wrap white-bg">
+                        <div class="single_wrap">
+                            <h4>Job description</h4>
+                            <p>{{job.description}}</p>
+                        </div>
+                    </div>
+
+                    {% if request.user != job.owner %}
+                    {% else %}
+                    <pre></pre>
+                    <pre></pre>
+                    <pre></pre>
+                    <a href="{% url 'jobs:job_edit' job.slug %}"><button class="boxed-btn3 w-100" type="submit">Edit Job</button></a>
+                    <pre></pre>
+                    <pre></pre>
+                    {% endif %}
+                    {% if request.user != job.owner %}
+
+
+                    <div class="apply_job_form white-bg">
+                        <h4>Apply for the job</h4>
+                        <form method="POST" enctype="multipart/form-data" id="form">
+                            {% csrf_token %}
+                            {% bootstrap_form form1 %}
+                            {% buttons %}
+
+                                <button class="boxed-btn3 w-100" type="submit">Apply Now</button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="apply_job_form white-bg">
+                                        <h3>Add Comment</h3>
+
+                                           <form method="POST">
+                                                {% csrf_token %}
+                                                {% bootstrap_form comform %}
+                                                {% buttons %}
+                                                    <button class="boxed-btn3 w-50" type="submit">Post</button>
+                                                {% endbuttons %}
+                                               </form>
+                                        </div>
+                                    </div>
+
+                   {% endif %}
+
+                <pre></pre>
+                <pre></pre>
+                <pre></pre>
+
+
+
+                <div class="col-lg-4">
+                    <div class="job_sumary">
+                        <div class="summery_header">
+                            <h3>Job Summery</h3>
+                        </div>
+                        <div class="job_content">
+                            <ul>
+                                <li>Published on: <span>{{job.published_at|date:'d M o'}}</span></li>
+                                <li>Vacancy: <span>{{job.Vacancy}} Position</span></li>
+                                <li>Salary: <span>{{job.salary}}k/y</span></li>
+                                <a href="https://www.google.com/maps/search/{{job.location}}+country/@33.1492197,48.6900967,6z/data=!3m1!4b1" target="_blank"><li>Location: <span>{{job.location}}</span></li></a>
+                                <li>Job Nature: <span> {{job.job_type}}</span></li>
+                                <li>Email: <span> {{job.emails}}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="share_wrap d-flex">
+                        <span>Share at:</span>
+                        <ul>
+                            <li><a href="#"> <i class="fa fa-facebook"></i></a> </li>
+                            <li><a href="#"> <i class="fa fa-google-plus"></i></a> </li>
+                            <li><a href="#"> <i class="fa fa-twitter"></i></a> </li>
+                            <li><a href="#"> <i class="fa fa-envelope"></i></a> </li>
+                        </ul>
+                    </div>
+
+                            {% for i in all_comments %}
+                                <p>{{i.user}}</p>
+                                <p>{{i.created_at}}</p>
+                                <p>{{i.comment}}</p>
+                            {% endfor %}
+
+                            <script>
+                              function initMap() {
+                                var uluru = {lat: -25.363, lng: 131.044};
+                                var grayStyles = [
+                                  {
+                                    featureType: "all",
+                                    stylers: [
+                                      { saturation: -90 },
+                                      { lightness: 50 }
+                                    ]
+                                  },
+                                  {elementType: 'labels.text.fill', stylers: [{color: '#ccdee9'}]}
+                                ];
+                                var map = new google.maps.Map(document.getElementById('map'), {
+                                  center: {lat: -31.197, lng: 150.744},
+                                  zoom: 9,
+                                  styles: grayStyles,
+                                  scrollwheel:  false
+                                });
+                              }
+
+                            </script>
+                            <script>
+    const form = document.getElementById('form');
+    form.addEventListener("submit", submitHandler);
+
+    function submitHandler(e) {
+        e.preventDefault();
+        $.ajax({
+            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url         : '{% url 'jobs:job_detail' job.slug %}', // the url where we want to POST
+            data        : $('#form').serialize(), // our form data
+            dataType    : 'json', // what type of data do we expect back from the server
+            success     : successFunction
+        });
+    }
+
+    function successFunction(msg) {
+        if (msg.message === 'success') {
+            alert('Success!');
+            form.reset()
+        }
+    }
+</script>
+                            <script>
+    const form = document.getElementById('form2');
+    form.addEventListener("submit", submitHandler2);
+
+    function submitHandler2(e) {
+        e.preventDefault();
+        $.ajax({
+            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url         : '{% url 'jobs:job_detail' job.slug %}', // the url where we want to POST
+            data        : $('#form2').serialize(), // our form data
+            dataType    : 'json', // what type of data do we expect back from the server
+            success     : successsFunction
+        });
+    }
+
+    function successsFunction(msg) {
+        if (msg.message === 'success') {
+            alert('Success!');
+            form.reset()
+        }
+    }
+</script>
+
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<a href="{% url 'jobs:a' job.slug %}">like</a>
+    {% endblock body %}
