@@ -52,7 +52,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [r'F:\djangooo\jobboard\src\templates'],
+        'DIRS': ['templates'],
 
         'APP_DIRS': True,
         'OPTIONS': {

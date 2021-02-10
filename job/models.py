@@ -24,10 +24,11 @@ class Apply(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=100)
     website = models.URLField()
-    cv = models.FileField(upload_to='apply/', blank=True, null=True)
+    cv = models.FileField(upload_to='apply/')
     cover_letter = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(blank=True, null=True)
+    applied=models.BooleanField(default=False,blank=True,null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug and self.name:

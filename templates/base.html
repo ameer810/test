@@ -1,5 +1,5 @@
 {% load static %}
-<!doctype html>
+<!--doctype html>-->
 <html class="no-js" lang="zxx">
 
 <head>
@@ -52,7 +52,7 @@
                                     <nav>
                                         <ul id="navigation">
 
-                                            <li><a href="{% url 'jobs:job_list' %}">home</a></li>
+                                            <li><a href="/jobs">home</a></li>
                                             {% if not request.user.is_authenticated %}
                                             <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
                                             {% endif %}
@@ -73,6 +73,8 @@
                                     </nav>
                                 </div>
                             </div>
+                            <a class="boxed-btn3" href="{% url 'jobs:add_job' %}">Post a Job</a>
+
                             <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                                 <div class="Appointment">
 
@@ -81,12 +83,12 @@
 
                                     <div class="d-none d-lg-block">
 
-                                        <a class="boxed-btn3" href="{% url 'jobs:add_job' %}">Post a Job</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="mobile_menu d-block d-lg-none"></div>
+
                             </div>
                         </div>
                     </div>
@@ -225,7 +227,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="{% static 'js/mail-script.js' %}"></script>
 
 
-    <script src="{% static 'js/main.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 
 
 	<script>

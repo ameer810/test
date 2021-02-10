@@ -9,15 +9,27 @@ from django.http import JsonResponse
 from rest_framework import generics
 from rest_framework import mixins
 from . import serializers
+from django.contrib import messages
 
 
 # Create your views here.
+# if request.is_ajax():
+#     form = ApplyForm(request.POST, request.FILES)
+#     if form.is_valid():
+#         myform = form.save(commit=False)
+#         myform.user = request.user
+#         job_detail.apply_count += 1
+#         myform.job = job_detail
+#         myform.save()
+#         job_detail.save()
+#         return JsonResponse()
 
 
 def job_detail(request, slug):
     is_fav = False
+    # kl=Apply.objects.get(user=request.user,applied=False)
     job_detail = Job.objects.get(slug=slug)
-    if request.is_ajax():
+    if request.method == 'POST':
         form = ApplyForm(request.POST, request.FILES)
         if form.is_valid():
             myform = form.save(commit=False)
@@ -26,14 +38,12 @@ def job_detail(request, slug):
             myform.job = job_detail
             myform.save()
             job_detail.save()
-            return JsonResponse()
-
-
 
     else:
         form = ApplyForm()
 
     k = job_detail.Vacancy - job_detail.apply_count
+
     comform = CommentsForm()
     if request.method == 'POST':
         comform = CommentsForm(request.POST)
@@ -45,7 +55,7 @@ def job_detail(request, slug):
     else:
         comform = CommentsForm()
     all_comments = Comments.objects.all()
-    context = {'k': k, 'job': job_detail, 'form1': form, 'is_fav': is_fav,'comform':comform,'all_comments':all_comments}
+    context = { 'job': job_detail, 'form1': form, 'is_fav': is_fav,'comform':comform,'all_comments':all_comments}
 
     return render(request, 'job/job_detail.html', context)
 
@@ -73,20 +83,20 @@ def job_list(request):
     context = {'jobs': page_obj, 'myfilter': myfilter, 'dd': job_list}  # template name
     return render(request, 'job/job_list.html', context)
 
-
+@login_required
 def Apply_view(request):
-    Apply_list = Apply.objects.filter(user=request.user).order_by('user')
+    Apply_list = Apply.objects.filter(user=request.user).order_by('-created_at')
     job_list = Job.objects.all()
 
     return render(request, 'job/exampl.html', {'Apply_list': Apply_list, 'dd': job_list})
 
-
+@login_required
 def Apply_view_2(request):
     Apply_list = Apply.objects.all()
 
     return render(request, 'job/exampl_2.html', {'Apply_list': Apply_list})
 
-
+@login_required
 def delete_job(request, slug):
     job = get_object_or_404(Job, slug=slug)
     job.delete()
@@ -110,14 +120,14 @@ def add_job(request):
 
     return render(request, 'job/add_job.html', {'form': form})
 
-
+@login_required
 def post_favourite_list(request):
     user = request.user
     favourite_posts = user.favourite.all()
     context = {'favourite_posts': favourite_posts}
     return render(request, 'job/fil.html', context)
 
-
+@login_required
 def post_fav(request, slug):
     post = Job.objects.get(slug=slug)
     if post.favourite.filter(id=request.user.id).exists():
@@ -136,7 +146,7 @@ def post_fav(request, slug):
         post.likee.add(request.user)
     return redirect(reverse('jobs:job_detail', kwargs={'slug': post.slug}))'''
 
-
+@login_required
 def job_edit(request, slug):
     job = Job.objects.get(slug=slug)
     l=job.owner
